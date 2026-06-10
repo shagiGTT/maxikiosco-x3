@@ -70,13 +70,13 @@ export default function Admin() {
   }, [autorizado]);
 
 
-  function reproducirSonidoNuevoPedido() {
-  const audio = new Audio(
-    "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
-  );
+function reproducirSonidoNuevoPedido() {
+  const audio = new Audio("/alertaPedido.mp3");
 
-  audio.play().catch(() => {
-    console.log("El navegador bloqueó el sonido hasta que haya interacción.");
+  audio.volume = 1;
+
+  audio.play().catch((error) => {
+    console.log("Error reproduciendo sonido:", error);
   });
 }
 
