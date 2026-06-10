@@ -36,19 +36,32 @@ export async function POST(request: Request) {
       id: paymentId,
     });
 
-    if (pago.status !== "approved") {
-      return NextResponse.json({ ok: true });
-    }
-
     const pedidoId = pago.external_reference;
 
     if (!pedidoId) {
       return NextResponse.json({ ok: true });
     }
 
+    if (pago.status !== "approved") {
+      await supabaseAdmin
+        .from("pedidos")
+        .update({
+          payment_id: String(paymentId),
+          estado_pago: pago.status || "unknown",
+        })
+        .eq("id", Number(pedidoId));
+
+      return NextResponse.json({ ok: true });
+    }
+
     const { error } = await supabaseAdmin
       .from("pedidos")
-      .update({ estado: "Preparando" })
+      .update({
+        estado: "Preparando",
+        payment_id: String(paymentId),
+        estado_pago: pago.status,
+        fecha_pago: new Date().toISOString(),
+      })
       .eq("id", Number(pedidoId));
 
     if (error) {
