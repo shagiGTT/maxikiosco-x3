@@ -363,6 +363,28 @@ export default function Admin() {
                                 <strong>Código:</strong> {pedido.codigo}
                               </p>
 
+                              {pedido.estado_pago && (
+                              <p className="mt-2 text-xs">
+                                <strong>Pago:</strong>{" "}
+                                {pedido.estado_pago === "approved"
+                                  ? "✅ Aprobado"
+                                  : pedido.estado_pago}
+                              </p>
+                            )}
+
+                            {pedido.payment_id && (
+                              <p className="text-xs">
+                                <strong>Operación MP:</strong> {pedido.payment_id}
+                              </p>
+                            )}
+
+                            {pedido.fecha_pago && (
+                              <p className="text-xs">
+                                <strong>Fecha pago:</strong>{" "}
+                                {new Date(pedido.fecha_pago).toLocaleString("es-AR")}
+                              </p>
+                            )}
+
                               <div className="mt-2 space-y-2">
                                 {pedido.detalle_pedidos.map((item: any) => (
                                   <div
