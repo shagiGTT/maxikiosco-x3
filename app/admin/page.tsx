@@ -267,7 +267,7 @@ export default function Admin() {
         ) : (
           <>
             <div className="mt-6 overflow-x-auto pb-4">
-              <div className="grid min-w-[900px] grid-cols-4 gap-4">
+            <div className="grid min-w-[760px] grid-cols-4 gap-3">
                 {estadosActivos.map((estado) => {
                   const pedidosDelEstado = pedidos.filter(
                     (pedido) => pedido.estado === estado
