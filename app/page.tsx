@@ -24,6 +24,8 @@ export default function Home() {
   const [cargando, setCargando] = useState(true);
   const [enviando, setEnviando] = useState(false);
   const [pedidoCreado, setPedidoCreado] = useState<any>(null);
+  const [busqueda, setBusqueda] = useState("");
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todas");
 
   const [cliente, setCliente] = useState({
     nombre: "",
@@ -124,6 +126,27 @@ export default function Home() {
   }
 
   const cantidadTotal = carrito.reduce((suma, item) => suma + item.cantidad, 0);
+  const categorias = [
+  "Todas",
+  "Bebidas",
+  "Golosinas",
+  "Congelados",
+  "Almacén",
+  "Limpieza",
+];
+
+const productosFiltrados = productos.filter((producto) => {
+  const coincideBusqueda =
+    producto.nombre
+      .toLowerCase()
+      .includes(busqueda.toLowerCase());
+
+  const coincideCategoria =
+    categoriaSeleccionada === "Todas" ||
+    producto.categoria === categoriaSeleccionada;
+
+  return coincideBusqueda && coincideCategoria;
+});
 
   const total = carrito.reduce(
     (suma, item) => suma + item.precio * item.cantidad,
@@ -236,13 +259,42 @@ export default function Home() {
         </div>
       </header>
 
-      <section className="bg-yellow-400 px-4 py-8 text-center sm:py-12">
-        <h2 className="text-3xl font-black text-black sm:text-5xl">
-          ¡Bienvenido!
-        </h2>
-        <p className="mt-2 text-base font-medium text-black sm:text-xl">
-          Elegí tus productos y recibí tu pedido en casa.
-        </p>
+      <section className="bg-yellow-400 px-4 py-8">
+        <div className="mx-auto max-w-7xl">
+
+          <h2 className="text-center text-3xl font-black text-black sm:text-5xl">
+            SALVADORES X3
+          </h2>
+
+          <p className="mt-2 text-center font-semibold text-black">
+            Tu kiosco online de Cruz del Eje
+          </p>
+
+          <div className="mt-6">
+            <input
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              placeholder="🔍 ¿Qué estás buscando?"
+              className="w-full rounded-2xl bg-white p-4 text-lg shadow"
+            />
+          </div>
+
+          <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
+            {categorias.map((categoria) => (
+              <button
+                key={categoria}
+                onClick={() => setCategoriaSeleccionada(categoria)}
+                className={`rounded-xl px-4 py-2 font-bold whitespace-nowrap ${
+                  categoriaSeleccionada === categoria
+                    ? "bg-red-600 text-white"
+                    : "bg-white text-black"
+                }`}
+              >
+                {categoria}
+              </button>
+            ))}
+          </div>
+        </div>
       </section>
 
       <main className="mx-auto max-w-7xl p-4 sm:p-6">
@@ -253,7 +305,7 @@ export default function Home() {
             <p>Cargando productos...</p>
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {productos.map((producto) => (
+              {productosFiltrados.map((producto) => (
                 <div key={producto.id} className="rounded-2xl bg-white p-4 shadow">
                   <div className="h-24 overflow-hidden rounded-lg bg-white">
                     {producto.imagen ? (
