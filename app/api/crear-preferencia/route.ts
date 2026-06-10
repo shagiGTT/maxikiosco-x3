@@ -25,8 +25,7 @@ export async function POST(request: Request) {
     const telefonoSeguro = encodeURIComponent(String(telefono));
     const codigoSeguro = encodeURIComponent(String(codigo));
 
-    const urlRetorno = `http://localhost:3000/mis-pedidos?telefono=${telefonoSeguro}&codigo=${codigoSeguro}`;
-
+    const urlRetorno = `https://maxikiosco-x3.vercel.app/mis-pedidos?telefono=${telefono}&codigo=${codigo}`;
     const client = new MercadoPagoConfig({
       accessToken,
     });
