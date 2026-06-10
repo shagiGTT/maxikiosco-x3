@@ -69,6 +69,18 @@ export default function Admin() {
     return () => clearInterval(intervalo);
   }, [autorizado]);
 
+
+  function reproducirSonidoNuevoPedido() {
+  const audio = new Audio(
+    "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+  );
+
+  audio.play().catch(() => {
+    console.log("El navegador bloqueó el sonido hasta que haya interacción.");
+  });
+}
+
+
   function ingresar() {
     if (password === process.env.NEXT_PUBLIC_ADMIN_PASSWORD) {
       setAutorizado(true);
@@ -113,6 +125,7 @@ export default function Admin() {
         pedidosConDetalles.length > pedidosActuales.length
       ) {
         setAvisoNuevoPedido(true);
+        reproducirSonidoNuevoPedido();
 
         setTimeout(() => {
           setAvisoNuevoPedido(false);
