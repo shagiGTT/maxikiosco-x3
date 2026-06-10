@@ -53,6 +53,7 @@ export default function Admin() {
   const [pedidos, setPedidos] = useState<any[]>([]);
   const [cargando, setCargando] = useState(true);
   const [avisoNuevoPedido, setAvisoNuevoPedido] = useState(false);
+  const [pedidoSeleccionado, setPedidoSeleccionado] = useState<any | null>(null);
 
   useEffect(() => {
     if (!autorizado) return;
@@ -135,15 +136,19 @@ export default function Admin() {
     }
 
     cargarPedidos();
+
+    setPedidoSeleccionado((pedidoActual: any) =>
+      pedidoActual?.id === id
+        ? { ...pedidoActual, estado: nuevoEstado }
+        : pedidoActual
+    );
   }
 
   if (!autorizado) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4 text-gray-900">
         <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow">
-          <h1 className="text-3xl font-black text-red-600">
-            🔒 Panel Admin
-          </h1>
+          <h1 className="text-3xl font-black text-red-600">🔒 Panel Admin</h1>
 
           <p className="mt-2 text-gray-600">
             Ingresá la contraseña para administrar pedidos.
@@ -197,9 +202,9 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-3 text-gray-900 sm:p-4">
-      <div className="mx-auto max-w-[1600px]">
+      <div className="mx-auto max-w-[1800px]">
         {avisoNuevoPedido && (
-          <div className="mb-4 rounded-xl bg-green-600 p-4 text-center text-lg font-black text-white shadow">
+          <div className="mb-3 rounded-xl bg-green-600 p-3 text-center text-base font-black text-white shadow">
             🔔 Nuevo pedido recibido
           </div>
         )}
@@ -208,7 +213,7 @@ export default function Admin() {
           <div>
             <h1 className="text-3xl font-black text-red-600">Panel Admin</h1>
             <p className="text-sm text-gray-600">
-              Tablero de pedidos Maxikiosco X3
+              Tablero compacto de pedidos Maxikiosco X3
             </p>
           </div>
 
@@ -236,26 +241,26 @@ export default function Admin() {
           </div>
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="rounded-xl bg-white p-4 shadow">
-            <p className="text-sm text-gray-500">Total pedidos</p>
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <div className="rounded-xl bg-white p-3 shadow">
+            <p className="text-xs text-gray-500">Total pedidos</p>
             <p className="text-2xl font-black">{pedidos.length}</p>
           </div>
 
-          <div className="rounded-xl bg-white p-4 shadow">
-            <p className="text-sm text-gray-500">Activos</p>
+          <div className="rounded-xl bg-white p-3 shadow">
+            <p className="text-xs text-gray-500">Activos</p>
             <p className="text-2xl font-black text-red-600">
               {pedidosActivos.length}
             </p>
           </div>
 
-          <div className="rounded-xl bg-white p-4 shadow">
-            <p className="text-sm text-gray-500">Pendientes</p>
+          <div className="rounded-xl bg-white p-3 shadow">
+            <p className="text-xs text-gray-500">Pendientes</p>
             <p className="text-2xl font-black text-yellow-600">{pendientes}</p>
           </div>
 
-          <div className="rounded-xl bg-white p-4 shadow">
-            <p className="text-sm text-gray-500">Entregados</p>
+          <div className="rounded-xl bg-white p-3 shadow">
+            <p className="text-xs text-gray-500">Entregados</p>
             <p className="text-2xl font-black text-emerald-600">
               {pedidosEntregados.length}
             </p>
@@ -266,8 +271,8 @@ export default function Admin() {
           <p className="mt-6">Cargando pedidos...</p>
         ) : (
           <>
-            <div className="mt-6 overflow-x-auto pb-4">
-            <div className="grid min-w-[760px] grid-cols-4 gap-3">
+            <div className="mt-4 overflow-x-auto pb-3">
+              <div className="grid min-w-[1000px] grid-cols-4 gap-3">
                 {estadosActivos.map((estado) => {
                   const pedidosDelEstado = pedidos.filter(
                     (pedido) => pedido.estado === estado
@@ -276,10 +281,10 @@ export default function Admin() {
                   return (
                     <section
                       key={estado}
-                      className="rounded-2xl bg-white p-3 shadow"
+                      className="rounded-2xl bg-white p-2 shadow"
                     >
                       <div
-                        className={`mb-3 rounded-xl border px-3 py-2 ${colorEstado(
+                        className={`mb-2 rounded-xl border px-3 py-2 ${colorEstado(
                           estado
                         )}`}
                       >
@@ -292,31 +297,40 @@ export default function Admin() {
                         </p>
                       </div>
 
-                      <div className="space-y-3">
+                      <div className="max-h-[520px] space-y-2 overflow-y-auto pr-1">
                         {pedidosDelEstado.map((pedido) => (
-                            <div
-                              key={pedido.id}
-                              className="rounded-xl border bg-gray-50 p-2 shadow-sm"
-                            >
+                          <div
+                            key={pedido.id}
+                            className="rounded-xl border bg-gray-50 p-2 shadow-sm"
+                          >
                             <div className="flex items-start justify-between gap-2">
-                              <div>
-                                <h3 className="text-base font-black">
-                                  #{pedido.id}
-                                </h3>
+                              <div className="min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <h3 className="text-base font-black">
+                                    #{pedido.id}
+                                  </h3>
 
-                                <p className="text-xs font-bold leading-tight">
+                                  <span className="text-[11px] text-gray-500">
+                                    {new Date(
+                                      pedido.created_at
+                                    ).toLocaleTimeString("es-AR", {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                  </span>
+                                </div>
+
+                                <p className="truncate text-xs font-bold">
                                   {pedido.nombre}
                                 </p>
 
-                                <p className="text-xs text-gray-500">
-                                  {new Date(
-                                    pedido.created_at
-                                  ).toLocaleString("es-AR")}
+                                <p className="truncate text-[11px] text-gray-500">
+                                  📍 {pedido.direccion}
                                 </p>
                               </div>
 
                               <div className="text-right">
-                                <p className="text-lg font-black text-red-600">
+                                <p className="text-sm font-black text-red-600">
                                   {formatearPrecio(pedido.total)}
                                 </p>
 
@@ -326,115 +340,40 @@ export default function Admin() {
                                   </p>
                                 ) : (
                                   <p className="mt-1 rounded-full bg-gray-200 px-2 py-1 text-[10px] font-black text-gray-600">
-                                    ❌ SIN PAGAR
+                                    SIN PAGAR
                                   </p>
                                 )}
                               </div>
                             </div>
 
-                            <p className="mt-1 truncate text-[11px] text-gray-700">
-                              📍 {pedido.direccion}
-                            </p>
+                            <div className="mt-2 flex items-center justify-between gap-2">
+                              <div className="flex gap-1">
+                                <a
+                                  href={`tel:${pedido.telefono}`}
+                                  className="rounded-md bg-blue-100 px-2 py-1 text-[11px] font-bold text-blue-700"
+                                >
+                                  📞
+                                </a>
 
-                            <p className="truncate text-[11px] text-gray-600">
-                              📱 {pedido.telefono}
-                            </p>
-
-                            <div className="mt-1 flex flex-wrap gap-1">
-                              <a
-                                href={`tel:${pedido.telefono}`}
-                                className="rounded-md bg-blue-100 px-2 py-1 text-[11px] font-bold text-blue-700"
-                              >
-                                📞
-                              </a>
-
-                              <a
-                                href={`https://wa.me/${pedido.telefono.replace(
-                                  "+",
-                                  ""
-                                )}`}
-                                target="_blank"
-                                className="rounded-md bg-green-100 px-2 py-1 text-[11px] font-bold text-green-700"
-                              >
-                                💬
-                              </a>
-                            </div>
-
-                            <details className="mt-3 rounded-lg bg-white p-2">
-                              <summary className="cursor-pointer text-sm font-bold">
-                                Ver detalle
-                              </summary>
-
-                              {pedido.observaciones && (
-                                <p className="mt-2 text-xs">
-                                  <strong>Obs:</strong> {pedido.observaciones}
-                                </p>
-                              )}
-
-                              <p className="mt-2 text-xs">
-                                <strong>Código:</strong> {pedido.codigo}
-                              </p>
-
-                              {pedido.estado_pago && (
-                              <p className="mt-2 text-xs">
-                                <strong>Pago:</strong>{" "}
-                                {pedido.estado_pago === "approved"
-                                  ? "✅ Aprobado"
-                                  : pedido.estado_pago}
-                              </p>
-                            )}
-
-                            {pedido.payment_id && (
-                              <p className="text-xs">
-                                <strong>Operación MP:</strong> {pedido.payment_id}
-                              </p>
-                            )}
-
-                            {pedido.fecha_pago && (
-                              <p className="text-xs">
-                                <strong>Fecha pago:</strong>{" "}
-                                {new Date(pedido.fecha_pago).toLocaleString("es-AR")}
-                              </p>
-                            )}
-
-                              <div className="mt-2 space-y-2">
-                                {pedido.detalle_pedidos.map((item: any) => (
-                                  <div
-                                    key={item.id}
-                                    className="border-b pb-2 text-xs last:border-b-0"
-                                  >
-                                    <div className="flex justify-between gap-2">
-                                      <span>
-                                        <strong>{item.producto}</strong> (
-                                        {item.cantidad})
-                                      </span>
-
-                                      <strong>
-                                        {formatearPrecio(item.subtotal)}
-                                      </strong>
-                                    </div>
-
-                                    <p className="text-gray-500">
-                                      {formatearPrecio(item.precio)} c/u
-                                    </p>
-                                  </div>
-                                ))}
+                                <a
+                                  href={`https://wa.me/${pedido.telefono.replace(
+                                    "+",
+                                    ""
+                                  )}`}
+                                  target="_blank"
+                                  className="rounded-md bg-green-100 px-2 py-1 text-[11px] font-bold text-green-700"
+                                >
+                                  💬
+                                </a>
                               </div>
-                            </details>
 
-                            <select
-                              value={pedido.estado}
-                              onChange={(e) =>
-                                cambiarEstado(pedido.id, e.target.value)
-                              }
-                              className="mt-3 w-full rounded-lg border p-2 text-xs font-bold"
-                            >
-                              {estadosTodos.map((estado) => (
-                                <option key={estado} value={estado}>
-                                  {estado}
-                                </option>
-                              ))}
-                            </select>
+                              <button
+                                onClick={() => setPedidoSeleccionado(pedido)}
+                                className="rounded-md bg-gray-900 px-3 py-1 text-[11px] font-bold text-white"
+                              >
+                                Ver
+                              </button>
+                            </div>
                           </div>
                         ))}
 
@@ -450,7 +389,7 @@ export default function Admin() {
               </div>
             </div>
 
-            <section className="mt-6 rounded-2xl bg-white p-4 shadow">
+            <section className="mt-4 rounded-2xl bg-white p-4 shadow">
               <h2 className="text-xl font-black text-gray-800">Historial</h2>
 
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -458,70 +397,133 @@ export default function Admin() {
                   <summary className="cursor-pointer font-black text-emerald-700">
                     ✅ Entregados ({pedidosEntregados.length})
                   </summary>
-
-                  <div className="mt-3 space-y-2">
-                    {pedidosEntregados.map((pedido) => (
-                      <div
-                        key={pedido.id}
-                        className="rounded-lg bg-white p-3 text-sm shadow-sm"
-                      >
-                        <div className="flex justify-between">
-                          <strong>
-                            #{pedido.id} - {pedido.nombre}
-                          </strong>
-                          <strong>{formatearPrecio(pedido.total)}</strong>
-                        </div>
-
-                        <p className="text-xs text-gray-500">
-                          {new Date(pedido.created_at).toLocaleString("es-AR")}
-                        </p>
-                      </div>
-                    ))}
-
-                    {pedidosEntregados.length === 0 && (
-                      <p className="text-sm font-bold text-gray-500">
-                        Sin pedidos entregados.
-                      </p>
-                    )}
-                  </div>
                 </details>
 
                 <details className="rounded-xl border border-red-200 bg-red-50 p-4">
                   <summary className="cursor-pointer font-black text-red-700">
                     🔴 Cancelados ({pedidosCancelados.length})
                   </summary>
-
-                  <div className="mt-3 space-y-2">
-                    {pedidosCancelados.map((pedido) => (
-                      <div
-                        key={pedido.id}
-                        className="rounded-lg bg-white p-3 text-sm shadow-sm"
-                      >
-                        <div className="flex justify-between">
-                          <strong>
-                            #{pedido.id} - {pedido.nombre}
-                          </strong>
-                          <strong>{formatearPrecio(pedido.total)}</strong>
-                        </div>
-
-                        <p className="text-xs text-gray-500">
-                          {new Date(pedido.created_at).toLocaleString("es-AR")}
-                        </p>
-                      </div>
-                    ))}
-
-                    {pedidosCancelados.length === 0 && (
-                      <p className="text-sm font-bold text-gray-500">
-                        Sin pedidos cancelados.
-                      </p>
-                    )}
-                  </div>
                 </details>
               </div>
             </section>
           </>
         )}
       </div>
+
+      {pedidoSeleccionado && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-5 shadow-xl">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h2 className="text-2xl font-black">
+                  Pedido #{pedidoSeleccionado.id}
+                </h2>
+                <p className="text-sm text-gray-500">
+                  {new Date(pedidoSeleccionado.created_at).toLocaleString(
+                    "es-AR"
+                  )}
+                </p>
+              </div>
+
+              <button
+                onClick={() => setPedidoSeleccionado(null)}
+                className="rounded-lg bg-gray-100 px-3 py-2 font-black"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="mt-4 rounded-xl bg-gray-50 p-3 text-sm">
+              <p>
+                <strong>Cliente:</strong> {pedidoSeleccionado.nombre}
+              </p>
+              <p>
+                <strong>Teléfono:</strong> {pedidoSeleccionado.telefono}
+              </p>
+              <p>
+                <strong>Dirección:</strong> {pedidoSeleccionado.direccion}
+              </p>
+              {pedidoSeleccionado.observaciones && (
+                <p>
+                  <strong>Obs:</strong> {pedidoSeleccionado.observaciones}
+                </p>
+              )}
+              <p>
+                <strong>Código:</strong> {pedidoSeleccionado.codigo}
+              </p>
+            </div>
+
+            <div className="mt-4 rounded-xl bg-green-50 p-3 text-sm">
+              <p>
+                <strong>Pago:</strong>{" "}
+                {pedidoSeleccionado.estado_pago === "approved"
+                  ? "✅ Aprobado"
+                  : "❌ Sin pagar"}
+              </p>
+
+              {pedidoSeleccionado.payment_id && (
+                <p>
+                  <strong>Operación MP:</strong>{" "}
+                  {pedidoSeleccionado.payment_id}
+                </p>
+              )}
+
+              {pedidoSeleccionado.fecha_pago && (
+                <p>
+                  <strong>Fecha pago:</strong>{" "}
+                  {new Date(pedidoSeleccionado.fecha_pago).toLocaleString(
+                    "es-AR"
+                  )}
+                </p>
+              )}
+
+              <p className="mt-2 text-lg font-black text-red-600">
+                Total: {formatearPrecio(pedidoSeleccionado.total)}
+              </p>
+            </div>
+
+            <div className="mt-4">
+              <h3 className="font-black">Productos</h3>
+
+              <div className="mt-2 space-y-2">
+                {pedidoSeleccionado.detalle_pedidos?.map((item: any) => (
+                  <div
+                    key={item.id}
+                    className="flex justify-between border-b pb-2 text-sm last:border-b-0"
+                  >
+                    <div>
+                      <p className="font-bold">
+                        {item.producto} ({item.cantidad})
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {formatearPrecio(item.precio)} c/u
+                      </p>
+                    </div>
+
+                    <p className="font-black">
+                      {formatearPrecio(item.subtotal)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <select
+              value={pedidoSeleccionado.estado}
+              onChange={(e) =>
+                cambiarEstado(pedidoSeleccionado.id, e.target.value)
+              }
+              className="mt-4 w-full rounded-xl border p-3 text-sm font-bold"
+            >
+              {estadosTodos.map((estado) => (
+                <option key={estado} value={estado}>
+                  {estado}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
