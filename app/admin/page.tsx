@@ -54,6 +54,8 @@ export default function Admin() {
   const [cargando, setCargando] = useState(true);
   const [avisoNuevoPedido, setAvisoNuevoPedido] = useState(false);
   const [pedidoSeleccionado, setPedidoSeleccionado] = useState<any | null>(null);
+  const [busqueda, setBusqueda] = useState("");
+  const [filtroPago, setFiltroPago] = useState("todos");
 
   useEffect(() => {
     if (!autorizado) return;
@@ -200,6 +202,24 @@ export default function Admin() {
     (pedido) => pedido.estado === "Pendiente de aceptación"
   ).length;
 
+  const pedidosFiltrados = pedidos.filter((pedido) => {
+  const texto = busqueda.toLowerCase();
+
+  const coincideBusqueda =
+    pedido.nombre?.toLowerCase().includes(texto) ||
+    pedido.telefono?.toLowerCase().includes(texto) ||
+    pedido.direccion?.toLowerCase().includes(texto) ||
+    pedido.codigo?.toLowerCase().includes(texto) ||
+    String(pedido.id).includes(texto);
+
+  const coincidePago =
+    filtroPago === "todos" ||
+    (filtroPago === "pagados" && pedido.estado_pago === "approved") ||
+    (filtroPago === "sin_pagar" && pedido.estado_pago !== "approved");
+
+  return coincideBusqueda && coincidePago;
+});
+
   return (
     <div className="min-h-screen bg-gray-100 p-3 text-gray-900 sm:p-4">
       <div className="mx-auto max-w-[1800px]">
@@ -267,6 +287,25 @@ export default function Admin() {
           </div>
         </div>
 
+
+        <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_180px]">
+        <input
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+          className="rounded-xl border bg-white px-4 py-3 text-sm font-bold shadow-sm outline-none"
+          placeholder="🔍 Buscar por pedido, nombre, teléfono, código o dirección..."
+        />
+
+        <select
+          value={filtroPago}
+          onChange={(e) => setFiltroPago(e.target.value)}
+          className="rounded-xl border bg-white px-4 py-3 text-sm font-bold shadow-sm outline-none"
+        >
+          <option value="todos">Todos</option>
+          <option value="pagados">Pagados</option>
+          <option value="sin_pagar">Sin pagar</option>
+        </select>
+      </div>
         {cargando ? (
           <p className="mt-6">Cargando pedidos...</p>
         ) : (
@@ -274,9 +313,9 @@ export default function Admin() {
             <div className="mt-4 overflow-x-auto pb-3">
               <div className="grid min-w-[1000px] grid-cols-4 gap-3">
                 {estadosActivos.map((estado) => {
-                  const pedidosDelEstado = pedidos.filter(
-                    (pedido) => pedido.estado === estado
-                  );
+                const pedidosDelEstado = pedidosFiltrados.filter(
+                  (pedido) => pedido.estado === estado
+                );
 
                   return (
                     <section
