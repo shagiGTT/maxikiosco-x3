@@ -126,13 +126,14 @@ export default function Home() {
   }
 
   const cantidadTotal = carrito.reduce((suma, item) => suma + item.cantidad, 0);
-  const categorias = [
-  "Todas",
-  "Bebidas",
-  "Golosinas",
-  "Congelados",
-  "Almacén",
-  "Limpieza",
+
+const categorias = [
+  { nombre: "Todas", icono: "🛍️" },
+  { nombre: "Bebidas", icono: "🥤" },
+  { nombre: "Golosinas", icono: "🍫" },
+  { nombre: "Congelados", icono: "🧊" },
+  { nombre: "Almacén", icono: "🛒" },
+  { nombre: "Limpieza", icono: "🧽" },
 ];
 
 const productosFiltrados = productos.filter((producto) => {
@@ -279,18 +280,21 @@ const productosFiltrados = productos.filter((producto) => {
             />
           </div>
 
-          <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
+          <div className="mt-5 flex gap-3 overflow-x-auto pb-2">
             {categorias.map((categoria) => (
               <button
-                key={categoria}
-                onClick={() => setCategoriaSeleccionada(categoria)}
-                className={`rounded-xl px-4 py-2 font-bold whitespace-nowrap ${
-                  categoriaSeleccionada === categoria
+                key={categoria.nombre}
+                onClick={() => setCategoriaSeleccionada(categoria.nombre)}
+                className={`min-w-[86px] rounded-2xl p-3 text-center shadow transition active:scale-95 ${
+                  categoriaSeleccionada === categoria.nombre
                     ? "bg-red-600 text-white"
-                    : "bg-white text-black"
+                    : "bg-white text-gray-900"
                 }`}
               >
-                {categoria}
+                <div className="text-2xl">{categoria.icono}</div>
+                <div className="mt-1 text-xs font-black">
+                  {categoria.nombre}
+                </div>
               </button>
             ))}
           </div>
