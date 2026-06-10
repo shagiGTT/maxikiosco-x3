@@ -294,17 +294,17 @@ export default function Admin() {
 
                       <div className="space-y-3">
                         {pedidosDelEstado.map((pedido) => (
-                          <div
-                            key={pedido.id}
-                            className="rounded-xl border bg-gray-50 p-3 shadow-sm"
-                          >
+                            <div
+                              key={pedido.id}
+                              className="rounded-xl border bg-gray-50 p-2 shadow-sm"
+                            >
                             <div className="flex items-start justify-between gap-2">
                               <div>
-                                <h3 className="text-lg font-black">
+                                <h3 className="text-base font-black">
                                   #{pedido.id}
                                 </h3>
 
-                                <p className="text-sm font-bold">
+                                <p className="text-xs font-bold leading-tight">
                                   {pedido.nombre}
                                 </p>
 
@@ -315,23 +315,35 @@ export default function Admin() {
                                 </p>
                               </div>
 
-                              <p className="text-lg font-black text-red-600">
-                                {formatearPrecio(pedido.total)}
-                              </p>
+                              <div className="text-right">
+                                <p className="text-lg font-black text-red-600">
+                                  {formatearPrecio(pedido.total)}
+                                </p>
+
+                                {pedido.estado_pago === "approved" ? (
+                                  <p className="mt-1 rounded-full bg-emerald-100 px-2 py-1 text-[10px] font-black text-emerald-700">
+                                    ✅ PAGADO
+                                  </p>
+                                ) : (
+                                  <p className="mt-1 rounded-full bg-gray-200 px-2 py-1 text-[10px] font-black text-gray-600">
+                                    ❌ SIN PAGAR
+                                  </p>
+                                )}
+                              </div>
                             </div>
 
-                            <p className="mt-2 text-xs text-gray-700">
+                            <p className="mt-1 truncate text-[11px] text-gray-700">
                               📍 {pedido.direccion}
                             </p>
 
-                            <p className="text-xs text-gray-600">
+                            <p className="truncate text-[11px] text-gray-600">
                               📱 {pedido.telefono}
                             </p>
 
-                            <div className="mt-2 flex flex-wrap gap-2">
+                            <div className="mt-1 flex flex-wrap gap-1">
                               <a
                                 href={`tel:${pedido.telefono}`}
-                                className="rounded-lg bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700"
+                                className="rounded-md bg-blue-100 px-2 py-1 text-[11px] font-bold text-blue-700"
                               >
                                 📞
                               </a>
@@ -342,7 +354,7 @@ export default function Admin() {
                                   ""
                                 )}`}
                                 target="_blank"
-                                className="rounded-lg bg-green-100 px-2 py-1 text-xs font-bold text-green-700"
+                                className="rounded-md bg-green-100 px-2 py-1 text-[11px] font-bold text-green-700"
                               >
                                 💬
                               </a>
