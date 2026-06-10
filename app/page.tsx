@@ -255,8 +255,18 @@ export default function Home() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {productos.map((producto) => (
                 <div key={producto.id} className="rounded-2xl bg-white p-4 shadow">
-                  <div className="flex h-36 items-center justify-center rounded-xl bg-gray-200 text-gray-500 sm:h-44">
-                    Foto producto
+                  <div className="h-24 overflow-hidden rounded-lg bg-white">
+                    {producto.imagen ? (
+                      <img
+                        src={producto.imagen}
+                        alt={producto.nombre}
+                        className="h-full w-full object-contain"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center bg-gray-200 text-xs text-gray-500">
+                        Sin foto
+                      </div>
+                    )}
                   </div>
 
                   <h4 className="mt-3 text-lg font-bold">{producto.nombre}</h4>
