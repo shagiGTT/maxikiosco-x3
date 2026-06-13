@@ -263,11 +263,11 @@ const productosFiltrados = productos.filter((producto) => {
       <section className="bg-yellow-400 px-4 py-8">
         <div className="mx-auto max-w-7xl">
 
-          <h2 className="text-center text-3xl font-black text-black sm:text-5xl">
+          <h2 className="text-center text-2xl font-black text-black">
             SALVADORES X3
           </h2>
 
-          <p className="mt-2 text-center font-semibold text-black">
+          <p className="mt-1 text-center text-sm text-black">
             Tu kiosco online de Cruz del Eje
           </p>
 
@@ -285,47 +285,38 @@ const productosFiltrados = productos.filter((producto) => {
               <button
                 key={categoria.nombre}
                 onClick={() => setCategoriaSeleccionada(categoria.nombre)}
-                className={`min-w-[86px] rounded-2xl p-3 text-center shadow transition active:scale-95 ${
+                className={`min-w-[72px] rounded-2xl p-2 text-center shadow transition active:scale-95 ${
                   categoriaSeleccionada === categoria.nombre
                     ? "bg-red-600 text-white"
                     : "bg-white text-gray-900"
                 }`}
               >
-                <div className="text-2xl">{categoria.icono}</div>
-                <div className="mt-1 text-xs font-black">
+                <div className="text-xl">{categoria.icono}</div>
+                <div className="mt-1 text-[10px] font-black">
                   {categoria.nombre}
                 </div>
               </button>
             ))}
           </div>
-          
-          <div className="mt-5 overflow-hidden rounded-3xl bg-red-600 p-5 text-white shadow-xl">
-            <p className="text-sm font-bold text-red-100">
-              🔥 Pedidos rápidos en Cruz del Eje
-            </p>
 
-            <h3 className="mt-1 text-2xl font-black leading-tight">
-              Comprá en Salvadores X3
-            </h3>
+<div className="mt-4 rounded-2xl bg-white p-3 shadow">
+  <div className="flex items-center justify-around text-center text-xs font-bold">
+    <div>
+      🚚
+      <p>Entrega rápida</p>
+    </div>
 
-            <p className="mt-2 text-sm text-red-100">
-              Elegí tus productos, hacé el pedido y pagá con Mercado Pago cuando el local lo acepte.
-            </p>
+    <div>
+      💳
+      <p>Pago seguro</p>
+    </div>
 
-            <div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs font-bold">
-              <div className="rounded-2xl bg-white/15 p-3">
-                🛒 Pedido online
-              </div>
-
-              <div className="rounded-2xl bg-white/15 p-3">
-                💳 Pago seguro
-              </div>
-
-              <div className="rounded-2xl bg-white/15 p-3">
-                📍 Cruz del Eje
-              </div>
-            </div>
-          </div>
+    <div>
+      📍
+      <p>Cruz del Eje</p>
+    </div>
+  </div>
+</div>
         </div>
       </section>
 
