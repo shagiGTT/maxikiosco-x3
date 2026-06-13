@@ -234,9 +234,6 @@ const productosFiltrados = productos.filter((producto) => {
             <h1 className="text-2xl font-extrabold leading-none sm:text-4xl">
               SALVADORES X3
             </h1>
-            <p className="mt-1 text-xs text-red-100 sm:text-sm">
-              Comprá online en minutos y seguí tu pedido en tiempo real.
-            </p>
           </div>
 
             <div className="flex items-center gap-2">
