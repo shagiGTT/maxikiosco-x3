@@ -309,39 +309,49 @@ const productosFiltrados = productos.filter((producto) => {
             <p>Cargando productos...</p>
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {productosFiltrados.map((producto) => (
-                <div key={producto.id} className="rounded-2xl bg-white p-4 shadow">
-                  <div className="h-24 overflow-hidden rounded-lg bg-white">
-                    {producto.imagen ? (
-                      <img
-                        src={producto.imagen}
-                        alt={producto.nombre}
-                        className="h-full w-full object-contain"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center bg-gray-200 text-xs text-gray-500">
-                        Sin foto
-                      </div>
-                    )}
+          {productosFiltrados.map((producto) => (
+            <div
+              key={producto.id}
+              className="overflow-hidden rounded-3xl bg-white shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div className="h-48 overflow-hidden bg-white">
+                {producto.imagen ? (
+                  <img
+                    src={producto.imagen}
+                    alt={producto.nombre}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center bg-gray-200 text-xs text-gray-500">
+                    Sin foto
                   </div>
+                )}
+              </div>
 
-                  <h4 className="mt-3 text-lg font-bold">{producto.nombre}</h4>
-                  <p className="text-sm text-gray-500">{producto.categoria}</p>
+              <div className="p-4">
+                <p className="text-xs font-bold uppercase tracking-wide text-gray-400">
+                  {producto.categoria}
+                </p>
 
-                  <div className="mt-3 flex items-center justify-between gap-3">
-                    <p className="text-2xl font-black text-red-600">
-                      {formatearPrecio(producto.precio)}
-                    </p>
+                <h4 className="mt-1 text-base font-black leading-tight">
+                  {producto.nombre}
+                </h4>
 
-                    <button
-                      onClick={() => agregarAlCarrito(producto)}
-                      className="rounded-xl bg-red-600 px-4 py-3 text-sm font-bold text-white active:scale-95 sm:text-base"
-                    >
-                      Agregar
-                    </button>
-                  </div>
+                <div className="mt-4 flex items-center justify-between gap-3">
+                  <p className="text-3xl font-black text-red-600">
+                    {formatearPrecio(producto.precio)}
+                  </p>
+
+                  <button
+                    onClick={() => agregarAlCarrito(producto)}
+                    className="rounded-2xl bg-red-600 px-5 py-3 text-sm font-black text-white shadow-md transition active:scale-95"
+                  >
+                    + Agregar
+                  </button>
                 </div>
-              ))}
+              </div>
+            </div>
+          ))}
             </div>
           )}
         </section>
