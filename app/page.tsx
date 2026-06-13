@@ -11,6 +11,7 @@ type Producto = {
   imagen?: string;
   stock?: number;
   destacado?: boolean;
+  descuento?: number;
 };
 
 type ProductoCarrito = Producto & {
@@ -60,6 +61,8 @@ export default function Home() {
       imagen: producto.imagen,
       stock: producto.existencias || producto.stock || 0,
       destacado: producto.destacado,
+      descuento: producto.descuento || 0,
+      
     }));
 
     setProductos(productosFormateados);
@@ -348,9 +351,30 @@ const productosDestacados = productos.filter(
                     {producto.nombre}
                   </p>
 
-                  <p className="mt-1 font-black text-red-600">
-                    {formatearPrecio(producto.precio)}
-                  </p>
+                  <div>
+                    {producto.descuento && producto.descuento > 0 ? (
+                      <>
+                        <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white">
+                          -{producto.descuento}%
+                        </span>
+
+                        <p className="mt-2 text-3xl font-black text-red-600">
+                          {formatearPrecio(
+                            producto.precio -
+                              (producto.precio * producto.descuento) / 100
+                          )}
+                        </p>
+
+                        <p className="text-sm text-gray-400 line-through">
+                          {formatearPrecio(producto.precio)}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-3xl font-black text-red-600">
+                        {formatearPrecio(producto.precio)}
+                      </p>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
