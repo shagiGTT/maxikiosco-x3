@@ -10,6 +10,7 @@ type Producto = {
   categoria: string;
   imagen?: string;
   stock?: number;
+  destacado?: boolean;
 };
 
 type ProductoCarrito = Producto & {
@@ -58,6 +59,7 @@ export default function Home() {
       categoria: producto["categorías"] || producto.categoria || "Sin categoría",
       imagen: producto.imagen,
       stock: producto.existencias || producto.stock || 0,
+      destacado: producto.destacado,
     }));
 
     setProductos(productosFormateados);
@@ -148,6 +150,10 @@ const productosFiltrados = productos.filter((producto) => {
 
   return coincideBusqueda && coincideCategoria;
 });
+
+const productosDestacados = productos.filter(
+  (producto) => producto.destacado
+);
 
   const total = carrito.reduce(
     (suma, item) => suma + item.precio * item.cantidad,
@@ -314,7 +320,45 @@ const productosFiltrados = productos.filter((producto) => {
 
       <main className="mx-auto max-w-7xl p-4 sm:p-6">
         <section>
-          <h3 className="mb-3 text-xl font-bold sm:text-2xl">Productos</h3>
+
+          <section className="mb-6">
+            <div className="mb-3 flex items-center justify-between">
+              <h3 className="text-xl font-black">
+                🔥 Más vendidos
+              </h3>
+            </div>
+
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {productosDestacados.map((producto) => (
+                <div
+                  key={`destacado-${producto.id}`}
+                  className="min-w-[150px] rounded-2xl bg-white p-3 shadow"
+                >
+                  <div className="flex h-24 items-center justify-center">
+                    {producto.imagen && (
+                      <img
+                        src={producto.imagen}
+                        alt={producto.nombre}
+                        className="h-full w-full object-contain"
+                      />
+                    )}
+                  </div>
+
+                  <p className="mt-2 line-clamp-2 text-sm font-bold">
+                    {producto.nombre}
+                  </p>
+
+                  <p className="mt-1 font-black text-red-600">
+                    {formatearPrecio(producto.precio)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+        <h3 className="mb-3 text-xl font-black sm:text-2xl">
+          🛒 Todos los productos
+        </h3>
 
           {cargando ? (
             <p>Cargando productos...</p>
