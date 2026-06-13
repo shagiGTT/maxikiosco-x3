@@ -74,7 +74,7 @@ export default function Home() {
     return valor.replace(/\D/g, "");
   }
 
-  function seleccionarCategoria(nombre: string) {
+function seleccionarCategoria(nombre: string) {
   setCategoriaSeleccionada(nombre);
 
   setTimeout(() => {
@@ -82,6 +82,13 @@ export default function Home() {
       behavior: "smooth",
       block: "start",
     });
+
+    setTimeout(() => {
+      window.scrollBy({
+        top: 90,
+        behavior: "smooth",
+      });
+    }, 300);
   }, 100);
 }
 
