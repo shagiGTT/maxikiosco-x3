@@ -232,10 +232,10 @@ const productosFiltrados = productos.filter((producto) => {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 p-3 sm:p-4">
           <div>
             <h1 className="text-2xl font-extrabold leading-none sm:text-4xl">
-              MAXIKIOSCO X3
+              SALVADORES X3
             </h1>
             <p className="mt-1 text-xs text-red-100 sm:text-sm">
-              Comprá online con transferencia
+              Comprá online en minutos y seguí tu pedido en tiempo real.
             </p>
           </div>
 
@@ -262,14 +262,6 @@ const productosFiltrados = productos.filter((producto) => {
 
       <section className="bg-yellow-400 px-4 py-8">
         <div className="mx-auto max-w-7xl">
-
-          <h2 className="text-center text-2xl font-black text-black">
-            SALVADORES X3
-          </h2>
-
-          <p className="mt-1 text-center text-sm text-black">
-            Tu kiosco online de Cruz del Eje
-          </p>
 
           <div className="mt-6">
             <input
@@ -317,6 +309,9 @@ const productosFiltrados = productos.filter((producto) => {
     </div>
   </div>
 </div>
+<p className="mt-3 text-center text-xs font-medium text-gray-600">
+  Comprá online en minutos y seguí tu pedido en tiempo real.
+</p>
         </div>
       </section>
 
