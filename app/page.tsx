@@ -356,44 +356,23 @@ const productosDestacados = productos.filter(
                     {producto.nombre}
                   </p>
 
-                  <div>
-                    {producto.descuento && producto.descuento > 0 ? (
-                      <>
-                        <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white">
-                          -{producto.descuento}%
-                        </span>
+                <div>
+                  {(producto.descuento || 0) > 0 && (
+                    <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white">
+                      -{producto.descuento}%
+                    </span>
+                  )}
 
-                        <p className="mt-2 text-3xl font-black text-red-600">
-                          {formatearPrecio(
-                            producto.precio -
-                              (producto.precio * producto.descuento) / 100
-                          )}
-                        </p>
+                  <p className="mt-1 text-3xl font-black text-red-600">
+                    {formatearPrecio(precioFinal(producto))}
+                  </p>
 
-                        <p className="text-sm text-gray-400 line-through">
-                          {formatearPrecio(producto.precio)}
-                        </p>
-                      </>
-                    ) : (
-                      <div>
-                        {producto.descuento && producto.descuento > 0 && (
-                          <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white">
-                            -{producto.descuento}%
-                          </span>
-                        )}
-
-                        <p className="mt-1 text-3xl font-black text-red-600">
-                          {formatearPrecio(precioFinal(producto))}
-                        </p>
-
-                        {producto.descuento && producto.descuento > 0 && (
-                          <p className="text-sm text-gray-400 line-through">
-                            {formatearPrecio(producto.precio)}
-                          </p>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                  {(producto.descuento || 0) > 0 && (
+                    <p className="text-sm text-gray-400 line-through">
+                      {formatearPrecio(producto.precio)}
+                    </p>
+                  )}
+                </div>
                 </div>
               ))}
             </div>
