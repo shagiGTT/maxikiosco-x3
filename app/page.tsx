@@ -314,12 +314,12 @@ const productosFiltrados = productos.filter((producto) => {
               key={producto.id}
               className="overflow-hidden rounded-3xl bg-white shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="h-48 overflow-hidden bg-white">
-                {producto.imagen ? (
+            <div className="flex h-40 items-center justify-center overflow-hidden bg-white p-4">
+                  {producto.imagen ? (
                   <img
                     src={producto.imagen}
                     alt={producto.nombre}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-contain"
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center bg-gray-200 text-xs text-gray-500">
