@@ -85,7 +85,7 @@ function seleccionarCategoria(nombre: string) {
 
     setTimeout(() => {
       window.scrollBy({
-        top: 90,
+        top: 120,
         behavior: "smooth",
       });
     }, 300);
