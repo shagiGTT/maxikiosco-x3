@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "../lib/supabase";
 
 type Producto = {
@@ -28,6 +28,7 @@ export default function Home() {
   const [pedidoCreado, setPedidoCreado] = useState<any>(null);
   const [busqueda, setBusqueda] = useState("");
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todas");
+  const productosRef = useRef<HTMLElement | null>(null);
 
   const [cliente, setCliente] = useState({
     nombre: "",
@@ -72,6 +73,17 @@ export default function Home() {
   function limpiarTelefono(valor: string) {
     return valor.replace(/\D/g, "");
   }
+
+  function seleccionarCategoria(nombre: string) {
+  setCategoriaSeleccionada(nombre);
+
+  setTimeout(() => {
+    productosRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, 100);
+}
 
   function formatearPrecio(valor: number) {
   return new Intl.NumberFormat("es-AR", {
@@ -161,6 +173,10 @@ const productosFiltrados = productos.filter((producto) => {
 
 const productosDestacados = productos.filter(
   (producto) => producto.destacado
+);
+
+const categoriaActual = categorias.find(
+  (categoria) => categoria.nombre === categoriaSeleccionada
 );
 
   const total = carrito.reduce(
@@ -287,7 +303,7 @@ const productosDestacados = productos.filter(
             {categorias.map((categoria) => (
               <button
                 key={categoria.nombre}
-                onClick={() => setCategoriaSeleccionada(categoria.nombre)}
+                onClick={() => seleccionarCategoria(categoria.nombre)}
                 className={`min-w-[72px] rounded-2xl p-2 text-center shadow transition active:scale-95 ${
                   categoriaSeleccionada === categoria.nombre
                     ? "bg-red-600 text-white"
@@ -326,7 +342,10 @@ const productosDestacados = productos.filter(
         </div>
       </section>
 
-      <main className="mx-auto max-w-7xl p-4 sm:p-6">
+      <main
+        ref={productosRef}
+        className="scroll-mt-24 mx-auto max-w-7xl p-4 sm:p-6"
+      >
         <section>
 
           <section className="mb-6">
@@ -378,9 +397,11 @@ const productosDestacados = productos.filter(
             </div>
           </section>
 
-        <h3 className="mb-3 text-xl font-black sm:text-2xl">
-          🛒 Todos los productos
-        </h3>
+          <h3 className="mb-3 text-xl font-black sm:text-2xl">
+            {categoriaSeleccionada === "Todas"
+              ? "🛒 Todos los productos"
+              : `${categoriaActual?.icono || "🛒"} ${categoriaSeleccionada}`}
+          </h3>
 
           {cargando ? (
             <p>Cargando productos...</p>
