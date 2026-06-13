@@ -298,6 +298,34 @@ const productosFiltrados = productos.filter((producto) => {
               </button>
             ))}
           </div>
+          
+          <div className="mt-5 overflow-hidden rounded-3xl bg-red-600 p-5 text-white shadow-xl">
+            <p className="text-sm font-bold text-red-100">
+              🔥 Pedidos rápidos en Cruz del Eje
+            </p>
+
+            <h3 className="mt-1 text-2xl font-black leading-tight">
+              Comprá en Salvadores X3
+            </h3>
+
+            <p className="mt-2 text-sm text-red-100">
+              Elegí tus productos, hacé el pedido y pagá con Mercado Pago cuando el local lo acepte.
+            </p>
+
+            <div className="mt-4 grid grid-cols-3 gap-2 text-center text-xs font-bold">
+              <div className="rounded-2xl bg-white/15 p-3">
+                🛒 Pedido online
+              </div>
+
+              <div className="rounded-2xl bg-white/15 p-3">
+                💳 Pago seguro
+              </div>
+
+              <div className="rounded-2xl bg-white/15 p-3">
+                📍 Cruz del Eje
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
