@@ -81,6 +81,11 @@ export default function Home() {
   }).format(valor);
 }
 
+function precioFinal(producto: Producto) {
+  const descuento = producto.descuento || 0;
+  return Math.round(producto.precio - (producto.precio * descuento) / 100);
+}
+
   function telefonoValido() {
     const telefonoLimpio = limpiarTelefono(cliente.telefono);
     return telefonoLimpio.length >= 8 && telefonoLimpio.length <= 15;
@@ -159,7 +164,7 @@ const productosDestacados = productos.filter(
 );
 
   const total = carrito.reduce(
-    (suma, item) => suma + item.precio * item.cantidad,
+    (suma, item) => suma + precioFinal(item) * item.cantidad,
     0
   );
 
@@ -208,8 +213,8 @@ const productosDestacados = productos.filter(
       producto_id: item.id,
       producto: item.nombre,
       cantidad: item.cantidad,
-      precio: item.precio,
-      subtotal: item.precio * item.cantidad,
+      precio: precioFinal(item),
+      subtotal: precioFinal(item) * item.cantidad,
     }));
 
     const { error: errorDetalle } = await supabase
@@ -370,9 +375,23 @@ const productosDestacados = productos.filter(
                         </p>
                       </>
                     ) : (
-                      <p className="text-3xl font-black text-red-600">
-                        {formatearPrecio(producto.precio)}
-                      </p>
+                      <div>
+                        {producto.descuento && producto.descuento > 0 && (
+                          <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white">
+                            -{producto.descuento}%
+                          </span>
+                        )}
+
+                        <p className="mt-1 text-3xl font-black text-red-600">
+                          {formatearPrecio(precioFinal(producto))}
+                        </p>
+
+                        {producto.descuento && producto.descuento > 0 && (
+                          <p className="text-sm text-gray-400 line-through">
+                            {formatearPrecio(producto.precio)}
+                          </p>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -416,10 +435,24 @@ const productosDestacados = productos.filter(
                   {producto.nombre}
                 </h4>
 
-                <div className="mt-4 flex items-center justify-between gap-3">
-                  <p className="text-3xl font-black text-red-600">
-                    {formatearPrecio(producto.precio)}
+                <div className="mt-4 flex items-end justify-between gap-3">
+                <div>
+                  {producto.descuento && producto.descuento > 0 && (
+                    <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white">
+                      -{producto.descuento}%
+                    </span>
+                  )}
+
+                  <p className="mt-1 text-3xl font-black text-red-600">
+                    {formatearPrecio(precioFinal(producto))}
                   </p>
+
+                  {producto.descuento && producto.descuento > 0 && (
+                    <p className="text-sm text-gray-400 line-through">
+                      {formatearPrecio(producto.precio)}
+                    </p>
+                  )}
+                </div>
 
                   <button
                     onClick={() => agregarAlCarrito(producto)}
@@ -490,12 +523,12 @@ const productosDestacados = productos.filter(
                             {item.nombre} ({item.cantidad})
                           </p>
                           <p className="text-sm text-gray-500">
-                            {formatearPrecio(item.precio)} c/u
+                            {formatearPrecio(precioFinal(item))} c/u
                           </p>
                         </div>
 
                         <p className="font-black">
-                          {formatearPrecio(item.precio * item.cantidad)}
+                          {formatearPrecio(precioFinal(item) * item.cantidad)}
                         </p>
                       </div>
 
