@@ -364,49 +364,49 @@ const categoriaActual = categorias.find(
 
             <div className="flex gap-3 overflow-x-auto pb-2">
               {productosDestacados.map((producto) => (
-                <div
-                  key={`destacado-${producto.id}`}
-                  className="min-w-[155px] rounded-2xl bg-white p-3 shadow"
-                >
-                  <div className="flex h-24 items-center justify-center">
-                    {producto.imagen && (
-                      <img
-                        src={producto.imagen}
-                        alt={producto.nombre}
-                        className="h-full w-full object-contain"
-                      />
-                    )}
-                  </div>
+            <div
+              key={`destacado-${producto.id}`}
+              className="relative flex min-h-[295px] min-w-[155px] flex-col rounded-2xl bg-white p-3 shadow"
+            >
+              {(producto.descuento || 0) > 0 && (
+                <span className="absolute left-3 top-3 z-10 rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white shadow">
+                  -{producto.descuento}%
+                </span>
+              )}
 
-                  <p className="mt-2 line-clamp-2 text-sm font-bold">
-                    {producto.nombre}
+              <div className="flex h-24 items-center justify-center">
+                {producto.imagen && (
+                  <img
+                    src={producto.imagen}
+                    alt={producto.nombre}
+                    className="h-full w-full object-contain"
+                  />
+                )}
+              </div>
+
+              <p className="mt-2 line-clamp-2 text-sm font-bold leading-tight">
+                {producto.nombre}
+              </p>
+
+              <div className="mt-2">
+                <p className="text-2xl font-black text-red-600">
+                  {formatearPrecio(precioFinal(producto))}
+                </p>
+
+                {(producto.descuento || 0) > 0 && (
+                  <p className="text-xs text-gray-400 line-through">
+                    {formatearPrecio(producto.precio)}
                   </p>
+                )}
+              </div>
 
-                  <div className="mt-2">
-                    {(producto.descuento || 0) > 0 && (
-                      <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white">
-                        -{producto.descuento}%
-                      </span>
-                    )}
-
-                    <p className="mt-1 text-2xl font-black text-red-600">
-                      {formatearPrecio(precioFinal(producto))}
-                    </p>
-
-                    {(producto.descuento || 0) > 0 && (
-                      <p className="text-xs text-gray-400 line-through">
-                        {formatearPrecio(producto.precio)}
-                      </p>
-                    )}
-                  </div>
-
-                  <button
-                    onClick={() => agregarAlCarrito(producto)}
-                    className="mt-3 w-full rounded-xl bg-red-600 py-2 text-xs font-black text-white active:scale-95"
-                  >
-                    + Agregar
-                  </button>
-                </div>
+              <button
+                onClick={() => agregarAlCarrito(producto)}
+                className="mt-auto w-full rounded-xl bg-red-600 py-2 text-xs font-black text-white active:scale-95"
+              >
+                + Agregar
+              </button>
+            </div>
               ))}
             </div>
           </section>
