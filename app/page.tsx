@@ -366,7 +366,7 @@ const categoriaActual = categorias.find(
               {productosDestacados.map((producto) => (
                 <div
                   key={`destacado-${producto.id}`}
-                  className="min-w-[150px] rounded-2xl bg-white p-3 shadow"
+                  className="min-w-[155px] rounded-2xl bg-white p-3 shadow"
                 >
                   <div className="flex h-24 items-center justify-center">
                     {producto.imagen && (
@@ -382,23 +382,30 @@ const categoriaActual = categorias.find(
                     {producto.nombre}
                   </p>
 
-                <div>
-                  {(producto.descuento || 0) > 0 && (
-                    <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white">
-                      -{producto.descuento}%
-                    </span>
-                  )}
+                  <div className="mt-2">
+                    {(producto.descuento || 0) > 0 && (
+                      <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white">
+                        -{producto.descuento}%
+                      </span>
+                    )}
 
-                  <p className="mt-1 text-3xl font-black text-red-600">
-                    {formatearPrecio(precioFinal(producto))}
-                  </p>
-
-                  {(producto.descuento || 0) > 0 && (
-                    <p className="text-sm text-gray-400 line-through">
-                      {formatearPrecio(producto.precio)}
+                    <p className="mt-1 text-2xl font-black text-red-600">
+                      {formatearPrecio(precioFinal(producto))}
                     </p>
-                  )}
-                </div>
+
+                    {(producto.descuento || 0) > 0 && (
+                      <p className="text-xs text-gray-400 line-through">
+                        {formatearPrecio(producto.precio)}
+                      </p>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => agregarAlCarrito(producto)}
+                    className="mt-3 w-full rounded-xl bg-red-600 py-2 text-xs font-black text-white active:scale-95"
+                  >
+                    + Agregar
+                  </button>
                 </div>
               ))}
             </div>
@@ -444,7 +451,7 @@ const categoriaActual = categorias.find(
 
                 <div className="mt-4 flex items-end justify-between gap-3">
                 <div>
-                  {producto.descuento && producto.descuento > 0 && (
+                  {(producto.descuento || 0) > 0 && (
                     <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white">
                       -{producto.descuento}%
                     </span>
@@ -454,7 +461,7 @@ const categoriaActual = categorias.find(
                     {formatearPrecio(precioFinal(producto))}
                   </p>
 
-                  {producto.descuento && producto.descuento > 0 && (
+                  {(producto.descuento || 0) > 0 && (
                     <p className="text-sm text-gray-400 line-through">
                       {formatearPrecio(producto.precio)}
                     </p>
