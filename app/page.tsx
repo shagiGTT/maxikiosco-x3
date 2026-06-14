@@ -366,7 +366,7 @@ const categoriaActual = categorias.find(
               {productosDestacados.map((producto) => (
             <div
               key={`destacado-${producto.id}`}
-              className="relative flex min-h-[295px] min-w-[155px] flex-col rounded-2xl bg-white p-3 shadow"
+              className="relative flex min-h-[245px] min-w-[155px] flex-col rounded-2xl bg-white p-3 shadow"
             >
               {(producto.descuento || 0) > 0 && (
                 <span className="absolute left-3 top-3 z-10 rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white shadow">
@@ -374,7 +374,7 @@ const categoriaActual = categorias.find(
                 </span>
               )}
 
-              <div className="flex h-24 items-center justify-center">
+              <div className="flex h-20 items-center justify-center">
                 {producto.imagen && (
                   <img
                     src={producto.imagen}
@@ -389,7 +389,7 @@ const categoriaActual = categorias.find(
               </p>
 
               <div className="mt-2">
-                <p className="text-2xl font-black text-red-600">
+                <p className="text-xl font-black text-red-600">
                   {formatearPrecio(precioFinal(producto))}
                 </p>
 
