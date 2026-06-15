@@ -28,7 +28,9 @@ export default function Home() {
   const [pedidoCreado, setPedidoCreado] = useState<any>(null);
   const [busqueda, setBusqueda] = useState("");
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("Todas");
+  const [toast, setToast] = useState("");
   const productosRef = useRef<HTMLElement | null>(null);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [cliente, setCliente] = useState({
     nombre: "",
@@ -39,6 +41,12 @@ export default function Home() {
 
   useEffect(() => {
     cargarProductos();
+
+    return () => {
+      if (toastTimerRef.current) {
+        clearTimeout(toastTimerRef.current);
+      }
+    };
   }, []);
 
   async function cargarProductos() {
@@ -71,6 +79,18 @@ export default function Home() {
 
   function limpiarTelefono(valor: string) {
     return valor.replace(/\D/g, "");
+  }
+
+  function mostrarAvisoCarrito(nombreProducto: string) {
+    setToast(`${nombreProducto} agregado al carrito`);
+
+    if (toastTimerRef.current) {
+      clearTimeout(toastTimerRef.current);
+    }
+
+    toastTimerRef.current = setTimeout(() => {
+      setToast("");
+    }, 2500);
   }
 
   function irAProductos() {
@@ -137,6 +157,8 @@ export default function Home() {
     } else {
       setCarrito([...carrito, { ...producto, cantidad: 1 }]);
     }
+
+    mostrarAvisoCarrito(producto.nombre);
   }
 
   function sumarCantidad(id: number) {
@@ -277,26 +299,40 @@ export default function Home() {
             </h1>
           </div>
 
-          <div className="flex items-center gap-2">
-            <a
-              href="/mis-pedidos"
-              className="rounded-xl bg-red-700 px-3 py-2 text-sm font-bold text-white sm:px-5 sm:text-base"
-            >
-              Mis pedidos
-            </a>
+          <button
+            onClick={() => {
+              setMostrarCarrito(true);
+              setMostrarCheckout(false);
+            }}
+            className="rounded-xl bg-white px-3 py-2 text-sm font-bold text-red-600 sm:px-5 sm:text-base"
+          >
+            🛒 Carrito ({cantidadTotal}){" "}
+            {cantidadTotal > 0 && formatearPrecio(total)}
+          </button>
+        </div>
+      </header>
+
+      {toast && (
+        <div className="fixed left-3 right-3 top-20 z-50 mx-auto max-w-md rounded-2xl bg-gray-900 p-3 text-white shadow-xl">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-black">✅ Producto agregado</p>
+              <p className="text-xs text-gray-200">{toast}</p>
+            </div>
 
             <button
               onClick={() => {
+                setToast("");
                 setMostrarCarrito(true);
                 setMostrarCheckout(false);
               }}
-              className="rounded-xl bg-white px-3 py-2 text-sm font-bold text-red-600 sm:px-5 sm:text-base"
+              className="rounded-xl bg-red-600 px-3 py-2 text-xs font-black text-white"
             >
-              🛒 ({cantidadTotal}) {formatearPrecio(total)}
+              Ver carrito
             </button>
           </div>
         </div>
-      </header>
+      )}
 
       <section className="bg-yellow-400 px-4 py-8">
         <div className="mx-auto max-w-7xl">
@@ -352,6 +388,15 @@ export default function Home() {
               <p className="mt-3 text-center text-xs font-medium text-gray-600">
                 Comprá online en minutos y seguí tu pedido en tiempo real.
               </p>
+
+              <div className="mt-3 text-center">
+                <a
+                  href="/mis-pedidos"
+                  className="text-xs font-black text-red-700 underline underline-offset-4"
+                >
+                  ¿Ya hiciste un pedido? Consultá el estado acá
+                </a>
+              </div>
             </>
           )}
         </div>
@@ -530,7 +575,8 @@ export default function Home() {
                 </p>
 
                 <p className="mt-2 text-lg">
-                  Código de seguimiento: <strong>{pedidoCreado.codigo}</strong>
+                  Código de seguimiento:{" "}
+                  <strong>{pedidoCreado.codigo}</strong>
                 </p>
 
                 <p className="mt-2">
