@@ -144,19 +144,19 @@ export default function Home() {
     nombreValido() && telefonoValido() && direccionValida();
 
   function agregarAlCarrito(producto: Producto) {
-    const productoExiste = carrito.find((item) => item.id === producto.id);
+    setCarrito((carritoActual) => {
+      const productoExiste = carritoActual.find((item) => item.id === producto.id);
 
-    if (productoExiste) {
-      setCarrito(
-        carrito.map((item) =>
+      if (productoExiste) {
+        return carritoActual.map((item) =>
           item.id === producto.id
             ? { ...item, cantidad: item.cantidad + 1 }
             : item
-        )
-      );
-    } else {
-      setCarrito([...carrito, { ...producto, cantidad: 1 }]);
-    }
+        );
+      }
+
+      return [...carritoActual, { ...producto, cantidad: 1 }];
+    });
 
     mostrarAvisoCarrito(producto.nombre);
   }
@@ -179,7 +179,19 @@ export default function Home() {
     );
   }
 
-  const cantidadTotal = carrito.reduce((suma, item) => suma + item.cantidad, 0);
+  const resumenCarrito = carrito.reduce(
+    (resumen, item) => {
+      const cantidad = item.cantidad || 0;
+
+      return {
+        cantidad: resumen.cantidad + cantidad,
+        total: resumen.total + precioFinal(item) * cantidad,
+      };
+    },
+    { cantidad: 0, total: 0 }
+  );
+
+  const cantidadTotal = resumenCarrito.cantidad;
 
   const categorias = [
     { nombre: "Todas", icono: "🛍️" },
@@ -212,10 +224,7 @@ export default function Home() {
     (categoria) => categoria.nombre === categoriaSeleccionada
   );
 
-  const total = carrito.reduce(
-    (suma, item) => suma + precioFinal(item) * item.cantidad,
-    0
-  );
+  const total = resumenCarrito.total;
 
   async function enviarPedido() {
     if (!formularioValido) {
@@ -313,7 +322,7 @@ export default function Home() {
       </header>
 
       {toast && (
-        <div className="fixed bottom-5 left-3 right-3 z-50 mx-auto max-w-md rounded-2xl bg-gray-900 p-3 text-white shadow-xl">
+        <div className="fixed left-3 right-3 top-20 z-50 mx-auto max-w-md rounded-2xl bg-gray-900 p-3 text-white shadow-xl">
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-black">✅ Producto agregado</p>
