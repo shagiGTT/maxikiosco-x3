@@ -322,7 +322,7 @@ export default function Home() {
       </header>
 
       {toast && (
-        <div className="fixed left-3 right-3 top-20 z-50 mx-auto max-w-md rounded-2xl bg-gray-900 p-3 text-white shadow-xl">
+        <div className="fixed bottom-5 left-3 right-3 z-50 mx-auto max-w-md rounded-2xl bg-gray-900 p-3 text-white shadow-xl">
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-black">✅ Producto agregado</p>
