@@ -300,7 +300,23 @@ const categoriaActual = categorias.find(
           <div className="mt-6">
             <input
               value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
+              onChange={(e) => {
+                setBusqueda(e.target.value);
+
+                setTimeout(() => {
+                  productosRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+
+                  setTimeout(() => {
+                    window.scrollBy({
+                      top: 90,
+                      behavior: "smooth",
+                    });
+                  }, 300);
+                }, 100);
+              }}
               placeholder="🔍 ¿Qué estás buscando?"
               className="w-full rounded-2xl bg-white p-4 text-lg shadow"
             />
@@ -424,9 +440,11 @@ const categoriaActual = categorias.find(
           {productosFiltrados.map((producto) => (
             <div
               key={producto.id}
-              className="overflow-hidden rounded-3xl bg-white shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
+              className="relative flex min-h-[330px] flex-col overflow-hidden rounded-3xl bg-white shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
             >
-            <div className="flex h-40 items-center justify-center overflow-hidden bg-white p-4">
+
+
+            <div className="flex h-32 items-center justify-center overflow-hidden bg-white p-4">
                   {producto.imagen ? (
                   <img
                     src={producto.imagen}
@@ -440,7 +458,7 @@ const categoriaActual = categorias.find(
                 )}
               </div>
 
-              <div className="p-4">
+              <div className="flex flex-1 flex-col p-4">
                 <p className="text-xs font-bold uppercase tracking-wide text-gray-400">
                   {producto.categoria}
                 </p>
@@ -449,7 +467,7 @@ const categoriaActual = categorias.find(
                   {producto.nombre}
                 </h4>
 
-                <div className="mt-4 flex items-end justify-between gap-3">
+                <div className="mt-auto flex items-end justify-between gap-3 pt-4">
                 <div>
                   {(producto.descuento || 0) > 0 && (
                     <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white">
