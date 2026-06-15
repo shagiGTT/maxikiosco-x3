@@ -162,16 +162,16 @@ export default function Home() {
   }
 
   function sumarCantidad(id: number) {
-    setCarrito(
-      carrito.map((item) =>
+    setCarrito((carritoActual) =>
+      carritoActual.map((item) =>
         item.id === id ? { ...item, cantidad: item.cantidad + 1 } : item
       )
     );
   }
 
   function restarCantidad(id: number) {
-    setCarrito(
-      carrito
+    setCarrito((carritoActual) =>
+      carritoActual
         .map((item) =>
           item.id === id ? { ...item, cantidad: item.cantidad - 1 } : item
         )
@@ -252,7 +252,7 @@ export default function Home() {
         telefono: telefonoLimpio,
         direccion: cliente.direccion.trim(),
         observaciones: cliente.observaciones.trim(),
-        total,
+        total: resumenCarrito.total,
         estado: "Pendiente de aceptación",
         codigo: codigoSeguimiento,
       })
@@ -309,14 +309,23 @@ export default function Home() {
           </div>
 
           <button
+            key={`carrito-${resumenCarrito.cantidad}-${resumenCarrito.total}`}
             onClick={() => {
               setMostrarCarrito(true);
               setMostrarCheckout(false);
             }}
-            className="rounded-xl bg-white px-3 py-2 text-sm font-bold text-red-600 sm:px-5 sm:text-base"
+            className="flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-black text-red-600 shadow sm:px-5 sm:text-base"
+            title="carrito-fix-v3"
           >
-            🛒 Carrito ({cantidadTotal}){" "}
-            {cantidadTotal > 0 && formatearPrecio(total)}
+            <span>🛒</span>
+
+            <span>Carrito</span>
+
+            <span className="rounded-full bg-red-600 px-2 py-0.5 text-xs font-black text-white">
+              {resumenCarrito.cantidad}
+            </span>
+
+            <span>{formatearPrecio(resumenCarrito.total)}</span>
           </button>
         </div>
       </header>
@@ -656,7 +665,7 @@ export default function Home() {
 
                 <div className="mt-4 flex justify-between text-2xl font-black">
                   <span>Total</span>
-                  <span>{formatearPrecio(total)}</span>
+                  <span>{formatearPrecio(resumenCarrito.total)}</span>
                 </div>
 
                 {!mostrarCheckout && (
