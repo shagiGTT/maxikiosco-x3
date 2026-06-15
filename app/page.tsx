@@ -63,7 +63,6 @@ export default function Home() {
       stock: producto.existencias || producto.stock || 0,
       destacado: producto.destacado,
       descuento: producto.descuento || 0,
-      
     }));
 
     setProductos(productosFormateados);
@@ -74,36 +73,39 @@ export default function Home() {
     return valor.replace(/\D/g, "");
   }
 
-function seleccionarCategoria(nombre: string) {
-  setCategoriaSeleccionada(nombre);
-
-  setTimeout(() => {
-    productosRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-
+  function irAProductos() {
     setTimeout(() => {
-      window.scrollBy({
-        top: 120,
+      productosRef.current?.scrollIntoView({
         behavior: "smooth",
+        block: "start",
       });
-    }, 300);
-  }, 100);
-}
+
+      setTimeout(() => {
+        window.scrollBy({
+          top: 120,
+          behavior: "smooth",
+        });
+      }, 300);
+    }, 100);
+  }
+
+  function seleccionarCategoria(nombre: string) {
+    setCategoriaSeleccionada(nombre);
+    irAProductos();
+  }
 
   function formatearPrecio(valor: number) {
-  return new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency: "ARS",
-    maximumFractionDigits: 0,
-  }).format(valor);
-}
+    return new Intl.NumberFormat("es-AR", {
+      style: "currency",
+      currency: "ARS",
+      maximumFractionDigits: 0,
+    }).format(valor);
+  }
 
-function precioFinal(producto: Producto) {
-  const descuento = producto.descuento || 0;
-  return Math.round(producto.precio - (producto.precio * descuento) / 100);
-}
+  function precioFinal(producto: Producto) {
+    const descuento = producto.descuento || 0;
+    return Math.round(producto.precio - (producto.precio * descuento) / 100);
+  }
 
   function telefonoValido() {
     const telefonoLimpio = limpiarTelefono(cliente.telefono);
@@ -118,7 +120,8 @@ function precioFinal(producto: Producto) {
     return cliente.direccion.trim().length >= 5;
   }
 
-  const formularioValido = nombreValido() && telefonoValido() && direccionValida();
+  const formularioValido =
+    nombreValido() && telefonoValido() && direccionValida();
 
   function agregarAlCarrito(producto: Producto) {
     const productoExiste = carrito.find((item) => item.id === producto.id);
@@ -156,35 +159,36 @@ function precioFinal(producto: Producto) {
 
   const cantidadTotal = carrito.reduce((suma, item) => suma + item.cantidad, 0);
 
-const categorias = [
-  { nombre: "Todas", icono: "🛍️" },
-  { nombre: "Bebidas", icono: "🥤" },
-  { nombre: "Golosinas", icono: "🍫" },
-  { nombre: "Congelados", icono: "🧊" },
-  { nombre: "Almacén", icono: "🛒" },
-  { nombre: "Limpieza", icono: "🧽" },
-];
+  const categorias = [
+    { nombre: "Todas", icono: "🛍️" },
+    { nombre: "Bebidas", icono: "🥤" },
+    { nombre: "Golosinas", icono: "🍫" },
+    { nombre: "Congelados", icono: "🧊" },
+    { nombre: "Almacén", icono: "🛒" },
+    { nombre: "Limpieza", icono: "🧽" },
+  ];
 
-const productosFiltrados = productos.filter((producto) => {
-  const coincideBusqueda =
-    producto.nombre
-      .toLowerCase()
-      .includes(busqueda.toLowerCase());
+  const estaBuscando = busqueda.trim().length > 0;
 
-  const coincideCategoria =
-    categoriaSeleccionada === "Todas" ||
-    producto.categoria === categoriaSeleccionada;
+  const productosFiltrados = productos.filter((producto) => {
+    const texto = busqueda.trim().toLowerCase();
 
-  return coincideBusqueda && coincideCategoria;
-});
+    const coincideBusqueda =
+      texto.length === 0 || producto.nombre.toLowerCase().includes(texto);
 
-const productosDestacados = productos.filter(
-  (producto) => producto.destacado
-);
+    const coincideCategoria =
+      estaBuscando ||
+      categoriaSeleccionada === "Todas" ||
+      producto.categoria === categoriaSeleccionada;
 
-const categoriaActual = categorias.find(
-  (categoria) => categoria.nombre === categoriaSeleccionada
-);
+    return coincideBusqueda && coincideCategoria;
+  });
+
+  const productosDestacados = productos.filter((producto) => producto.destacado);
+
+  const categoriaActual = categorias.find(
+    (categoria) => categoria.nombre === categoriaSeleccionada
+  );
 
   const total = carrito.reduce(
     (suma, item) => suma + precioFinal(item) * item.cantidad,
@@ -273,7 +277,7 @@ const categoriaActual = categorias.find(
             </h1>
           </div>
 
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <a
               href="/mis-pedidos"
               className="rounded-xl bg-red-700 px-3 py-2 text-sm font-bold text-white sm:px-5 sm:text-base"
@@ -296,7 +300,6 @@ const categoriaActual = categorias.find(
 
       <section className="bg-yellow-400 px-4 py-8">
         <div className="mx-auto max-w-7xl">
-
           <div className="mt-6">
             <input
               value={busqueda}
@@ -306,46 +309,51 @@ const categoriaActual = categorias.find(
             />
           </div>
 
-          <div className="mt-5 flex gap-3 overflow-x-auto pb-2">
-            {categorias.map((categoria) => (
-              <button
-                key={categoria.nombre}
-                onClick={() => seleccionarCategoria(categoria.nombre)}
-                className={`min-w-[72px] rounded-2xl p-2 text-center shadow transition active:scale-95 ${
-                  categoriaSeleccionada === categoria.nombre
-                    ? "bg-red-600 text-white"
-                    : "bg-white text-gray-900"
-                }`}
-              >
-                <div className="text-xl">{categoria.icono}</div>
-                <div className="mt-1 text-[10px] font-black">
-                  {categoria.nombre}
+          {!estaBuscando && (
+            <>
+              <div className="mt-5 flex gap-3 overflow-x-auto pb-2">
+                {categorias.map((categoria) => (
+                  <button
+                    key={categoria.nombre}
+                    onClick={() => seleccionarCategoria(categoria.nombre)}
+                    className={`min-w-[72px] rounded-2xl p-2 text-center shadow transition active:scale-95 ${
+                      categoriaSeleccionada === categoria.nombre
+                        ? "bg-red-600 text-white"
+                        : "bg-white text-gray-900"
+                    }`}
+                  >
+                    <div className="text-xl">{categoria.icono}</div>
+                    <div className="mt-1 text-[10px] font-black">
+                      {categoria.nombre}
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-4 rounded-2xl bg-white p-3 shadow">
+                <div className="flex items-center justify-around text-center text-xs font-bold">
+                  <div>
+                    🚚
+                    <p>Entrega rápida</p>
+                  </div>
+
+                  <div>
+                    💳
+                    <p>Pago seguro</p>
+                  </div>
+
+                  <div>
+                    📍
+                    <p>Cruz del Eje</p>
+                  </div>
                 </div>
-              </button>
-            ))}
-          </div>
+              </div>
 
-<div className="mt-4 rounded-2xl bg-white p-3 shadow">
-  <div className="flex items-center justify-around text-center text-xs font-bold">
-    <div>
-      🚚
-      <p>Entrega rápida</p>
-    </div>
-
-    <div>
-      💳
-      <p>Pago seguro</p>
-    </div>
-
-    <div>
-      📍
-      <p>Cruz del Eje</p>
-    </div>
-  </div>
-</div>
-<p className="mt-3 text-center text-xs font-medium text-gray-600">
-  Comprá online en minutos y seguí tu pedido en tiempo real.
-</p>
+              <p className="mt-3 text-center text-xs font-medium text-gray-600">
+                Comprá online en minutos y seguí tu pedido en tiempo real.
+              </p>
+            </>
+          )}
         </div>
       </section>
 
@@ -354,134 +362,140 @@ const categoriaActual = categorias.find(
         className="scroll-mt-24 mx-auto max-w-7xl p-4 sm:p-6"
       >
         <section>
-
-          <section className="mb-6">
-            <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-xl font-black">
-                🔥 Más vendidos
-              </h3>
-            </div>
-
-            <div className="flex gap-3 overflow-x-auto pb-2">
-              {productosDestacados.map((producto) => (
-            <div
-              key={`destacado-${producto.id}`}
-              className="relative flex min-h-[245px] min-w-[155px] flex-col rounded-2xl bg-white p-3 shadow"
-            >
-              {(producto.descuento || 0) > 0 && (
-                <span className="absolute left-3 top-3 z-10 rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white shadow">
-                  -{producto.descuento}%
-                </span>
-              )}
-
-              <div className="flex h-20 items-center justify-center">
-                {producto.imagen && (
-                  <img
-                    src={producto.imagen}
-                    alt={producto.nombre}
-                    className="h-full w-full object-contain"
-                  />
-                )}
+          {!estaBuscando && (
+            <section className="mb-6">
+              <div className="mb-3 flex items-center justify-between">
+                <h3 className="text-xl font-black">🔥 Más vendidos</h3>
               </div>
 
-              <p className="mt-2 line-clamp-2 text-sm font-bold leading-tight">
-                {producto.nombre}
-              </p>
+              <div className="flex gap-3 overflow-x-auto pb-2">
+                {productosDestacados.map((producto) => (
+                  <div
+                    key={`destacado-${producto.id}`}
+                    className="relative flex min-h-[245px] min-w-[155px] flex-col rounded-2xl bg-white p-3 shadow"
+                  >
+                    {(producto.descuento || 0) > 0 && (
+                      <span className="absolute left-3 top-3 z-10 rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white shadow">
+                        -{producto.descuento}%
+                      </span>
+                    )}
 
-              <div className="mt-2">
-                <p className="text-xl font-black text-red-600">
-                  {formatearPrecio(precioFinal(producto))}
-                </p>
+                    <div className="flex h-20 items-center justify-center">
+                      {producto.imagen && (
+                        <img
+                          src={producto.imagen}
+                          alt={producto.nombre}
+                          className="h-full w-full object-contain"
+                        />
+                      )}
+                    </div>
 
-                {(producto.descuento || 0) > 0 && (
-                  <p className="text-xs text-gray-400 line-through">
-                    {formatearPrecio(producto.precio)}
-                  </p>
-                )}
+                    <p className="mt-2 line-clamp-2 text-sm font-bold leading-tight">
+                      {producto.nombre}
+                    </p>
+
+                    <div className="mt-2">
+                      <p className="text-xl font-black text-red-600">
+                        {formatearPrecio(precioFinal(producto))}
+                      </p>
+
+                      {(producto.descuento || 0) > 0 && (
+                        <p className="text-xs text-gray-400 line-through">
+                          {formatearPrecio(producto.precio)}
+                        </p>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => agregarAlCarrito(producto)}
+                      className="mt-auto w-full rounded-xl bg-red-600 py-2 text-xs font-black text-white active:scale-95"
+                    >
+                      + Agregar
+                    </button>
+                  </div>
+                ))}
               </div>
-
-              <button
-                onClick={() => agregarAlCarrito(producto)}
-                className="mt-auto w-full rounded-xl bg-red-600 py-2 text-xs font-black text-white active:scale-95"
-              >
-                + Agregar
-              </button>
-            </div>
-              ))}
-            </div>
-          </section>
+            </section>
+          )}
 
           <h3 className="mb-3 text-xl font-black sm:text-2xl">
-            {categoriaSeleccionada === "Todas"
+            {estaBuscando
+              ? `🔍 Resultados para "${busqueda}"`
+              : categoriaSeleccionada === "Todas"
               ? "🛒 Todos los productos"
               : `${categoriaActual?.icono || "🛒"} ${categoriaSeleccionada}`}
           </h3>
 
           {cargando ? (
             <p>Cargando productos...</p>
-          ) : (
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {productosFiltrados.map((producto) => (
-
-            <div
-              key={producto.id}
-              className="overflow-hidden rounded-3xl bg-white shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
-            >
-
-
-            <div className="flex h-40 items-center justify-center overflow-hidden bg-white p-4">
-                  {producto.imagen ? (
-                  <img
-                    src={producto.imagen}
-                    alt={producto.nombre}
-                    className="h-full w-full object-contain"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center bg-gray-200 text-xs text-gray-500">
-                    Sin foto
-                  </div>
-                )}
-              </div>
-
-              <div className="p-4">
-                <p className="text-xs font-bold uppercase tracking-wide text-gray-400">
-                  {producto.categoria}
-                </p>
-
-                <h4 className="mt-1 text-base font-black leading-tight">
-                  {producto.nombre}
-                </h4>
-
-                <div className="mt-4 flex items-end justify-between gap-3">
-                <div>
-                  {(producto.descuento || 0) > 0 && (
-                    <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white">
-                      -{producto.descuento}%
-                    </span>
-                  )}
-
-                  <p className="mt-1 text-3xl font-black text-red-600">
-                    {formatearPrecio(precioFinal(producto))}
-                  </p>
-
-                  {(producto.descuento || 0) > 0 && (
-                    <p className="text-sm text-gray-400 line-through">
-                      {formatearPrecio(producto.precio)}
-                    </p>
-                  )}
-                </div>
-
-                  <button
-                    onClick={() => agregarAlCarrito(producto)}
-                    className="rounded-2xl bg-red-600 px-5 py-3 text-sm font-black text-white shadow-md transition active:scale-95"
-                  >
-                    + Agregar
-                  </button>
-                </div>
-              </div>
+          ) : productosFiltrados.length === 0 ? (
+            <div className="rounded-2xl bg-white p-6 text-center shadow">
+              <p className="text-lg font-black text-gray-700">
+                No encontramos productos
+              </p>
+              <p className="mt-1 text-sm text-gray-500">
+                Probá buscando con otro nombre.
+              </p>
             </div>
-          ))}
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {productosFiltrados.map((producto) => (
+                <div
+                  key={producto.id}
+                  className="overflow-hidden rounded-3xl bg-white shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="flex h-40 items-center justify-center overflow-hidden bg-white p-4">
+                    {producto.imagen ? (
+                      <img
+                        src={producto.imagen}
+                        alt={producto.nombre}
+                        className="h-full w-full object-contain"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center bg-gray-200 text-xs text-gray-500">
+                        Sin foto
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-4">
+                    <p className="text-xs font-bold uppercase tracking-wide text-gray-400">
+                      {producto.categoria}
+                    </p>
+
+                    <h4 className="mt-1 text-base font-black leading-tight">
+                      {producto.nombre}
+                    </h4>
+
+                    <div className="mt-4 flex items-end justify-between gap-3">
+                      <div>
+                        {(producto.descuento || 0) > 0 && (
+                          <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-black text-white">
+                            -{producto.descuento}%
+                          </span>
+                        )}
+
+                        <p className="mt-1 text-3xl font-black text-red-600">
+                          {formatearPrecio(precioFinal(producto))}
+                        </p>
+
+                        {(producto.descuento || 0) > 0 && (
+                          <p className="text-sm text-gray-400 line-through">
+                            {formatearPrecio(producto.precio)}
+                          </p>
+                        )}
+                      </div>
+
+                      <button
+                        onClick={() => agregarAlCarrito(producto)}
+                        className="rounded-2xl bg-red-600 px-5 py-3 text-sm font-black text-white shadow-md transition active:scale-95"
+                      >
+                        + Agregar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </section>
@@ -516,8 +530,7 @@ const categoriaActual = categorias.find(
                 </p>
 
                 <p className="mt-2 text-lg">
-                  Código de seguimiento:{" "}
-                  <strong>{pedidoCreado.codigo}</strong>
+                  Código de seguimiento: <strong>{pedidoCreado.codigo}</strong>
                 </p>
 
                 <p className="mt-2">
@@ -624,9 +637,9 @@ const categoriaActual = categorias.find(
                     </div>
 
                     <div>
-                    <label className="mb-2 block font-bold text-gray-700">
-                      📱 Número
-                    </label>
+                      <label className="mb-2 block font-bold text-gray-700">
+                        📱 Número
+                      </label>
 
                       <div className="overflow-hidden rounded-xl border-2 border-green-200 bg-white">
                         <div className="flex items-center">
@@ -651,7 +664,7 @@ const categoriaActual = categorias.find(
                       </div>
 
                       <p className="mt-2 text-sm text-gray-500">
-                         Ingresá el número utilizado al realizar el pedido.
+                        Ingresá el número utilizado al realizar el pedido.
                       </p>
 
                       {cliente.telefono && !telefonoValido() && (
@@ -690,7 +703,10 @@ const categoriaActual = categorias.find(
                       <textarea
                         value={cliente.observaciones}
                         onChange={(e) =>
-                          setCliente({ ...cliente, observaciones: e.target.value })
+                          setCliente({
+                            ...cliente,
+                            observaciones: e.target.value,
+                          })
                         }
                         className="min-h-24 w-full rounded-xl border p-4 text-base"
                         placeholder="Ej: tocar timbre, casa de rejas negras..."
