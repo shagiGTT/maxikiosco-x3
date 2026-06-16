@@ -81,6 +81,16 @@ export default function Home() {
     return valor.replace(/\D/g, "");
   }
 
+  function telefonoParaConsulta(valor: string) {
+    const telefonoLimpio = limpiarTelefono(valor);
+
+    if (telefonoLimpio.startsWith("54") && telefonoLimpio.length > 10) {
+      return telefonoLimpio.slice(2);
+    }
+
+    return telefonoLimpio;
+  }
+
   function mostrarAvisoCarrito(nombreProducto: string) {
     setToast(`${nombreProducto} agregado al carrito`);
 
@@ -626,7 +636,7 @@ export default function Home() {
 
                 <a
                   href={`/mis-pedidos?telefono=${encodeURIComponent(
-                    pedidoCreado.telefono
+                    telefonoParaConsulta(pedidoCreado.telefono)
                   )}&codigo=${encodeURIComponent(pedidoCreado.codigo)}`}
                   className="mt-4 block w-full rounded-xl bg-red-600 py-4 text-center text-lg font-black text-white active:scale-95"
                 >
