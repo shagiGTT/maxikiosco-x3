@@ -334,7 +334,7 @@ export default function Home() {
         <div className="fixed bottom-5 left-3 right-3 z-50 mx-auto max-w-md rounded-2xl bg-gray-900 p-3 text-white shadow-xl">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-black">✅ Producto agregado</p>
+              <p className="text-sm font-black">✅ Listo</p>
               <p className="text-xs text-gray-200">{toast}</p>
             </div>
 
@@ -592,18 +592,46 @@ export default function Home() {
                   Número de pedido: <strong>#{pedidoCreado.id}</strong>
                 </p>
 
-                <p className="mt-2 text-lg">
-                  Código de seguimiento:{" "}
-                  <strong>{pedidoCreado.codigo}</strong>
-                </p>
+                <div className="mt-4 rounded-xl bg-white p-4 shadow-sm">
+                  <p className="text-sm font-bold text-gray-600">
+                    Código de seguimiento
+                  </p>
 
-                <p className="mt-2">
+                  <div className="mt-2 flex items-center justify-between gap-3">
+                    <strong className="text-3xl text-green-700">
+                      {pedidoCreado.codigo}
+                    </strong>
+
+                    <button
+                      onClick={async () => {
+                        await navigator.clipboard.writeText(
+                          String(pedidoCreado.codigo)
+                        );
+                        setToast("Código de seguimiento copiado");
+                      }}
+                      className="rounded-xl bg-green-600 px-4 py-3 text-sm font-black text-white active:scale-95"
+                    >
+                      Copiar
+                    </button>
+                  </div>
+                </div>
+
+                <p className="mt-3">
                   Estado: <strong>{pedidoCreado.estado}</strong>
                 </p>
 
                 <p className="mt-3 text-sm text-gray-600">
                   Guardá este código. Lo vas a necesitar para consultar tu pedido.
                 </p>
+
+                <a
+                  href={`/mis-pedidos?telefono=${encodeURIComponent(
+                    pedidoCreado.telefono
+                  )}&codigo=${encodeURIComponent(pedidoCreado.codigo)}`}
+                  className="mt-4 block w-full rounded-xl bg-red-600 py-4 text-center text-lg font-black text-white active:scale-95"
+                >
+                  Consultar mi pedido
+                </a>
               </div>
             ) : carrito.length === 0 ? (
               <p>No agregaste productos todavía.</p>
@@ -775,21 +803,6 @@ export default function Home() {
                         className="min-h-24 w-full rounded-xl border p-4 text-base"
                         placeholder="Ej: tocar timbre, casa de rejas negras..."
                       />
-                    </div>
-
-                    <div className="rounded-xl border border-yellow-400 bg-yellow-100 p-4">
-                      <h4 className="text-lg font-black">
-                        Datos para la transferencia
-                      </h4>
-                      <p>
-                        <strong>Alias:</strong> maxikioscox3
-                      </p>
-                      <p>
-                        <strong>Titular:</strong> Gabriel Tarter
-                      </p>
-                      <p>
-                        <strong>Banco:</strong> Mercado Pago
-                      </p>
                     </div>
 
                     <button
